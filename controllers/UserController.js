@@ -1,6 +1,6 @@
 import sha1 from 'sha1';
 // eslint-disable-next-line import/no-named-as-default
-import dbClient from '../utils/db';
+const { dbClient } = require('../utils/db');
 
 /**
  * UserController class
@@ -27,10 +27,9 @@ class UserController {
   }
 
   static async getMe(req, res) {
-    const { userId } = req;
-    const user = await dbClient.collection.findOne({ _id: userId });
-    if (!user) return res.status(404).send({ error: 'User not found' });
-    return res.status(200).send({ id: user._id, email: user.email });
+    const { user } = req;
+    res.stats(200).send({ email: user.email, id: user._id.toString() });
   }
 }
 export default UserController;
+

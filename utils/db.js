@@ -51,8 +51,17 @@ class DBClient {
    * @param {string} key
    * @returns {Promise<string>}
    */
-  userCollection() {
+  async userCollection() {
+    console.log(await this.client.db().collection('users').findOne({ email: 'bob@dylan.com' }));
     return this.client.db().collection('users');
+  }
+
+  /**
+   * Get the value of a key in Redis
+   * @return {Promise<string>}
+   */
+  async fileCollection() {
+    return this.client.db().collection('files');
   }
 }
 export const dbClient = new DBClient();
