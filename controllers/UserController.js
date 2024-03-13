@@ -1,7 +1,9 @@
 import sha1 from 'sha1';
+import Queue from 'bull/lib/queue';
 // eslint-disable-next-line import/no-named-as-default
-const { dbClient } = require('../utils/db');
+import dbClient from '../utils/db';
 
+const userQueue = new Queue('email sending');
 /**
  * UserController class
  * @class
@@ -11,18 +13,19 @@ class UserController {
   static async postNew(req, res) {
     const email = req.body ? req.body.email : null;
     const password = req.body ? req.body.password : null;
-    console.log(email);
-    console.log(password);
+
     if (!email) return res.status(400).send({ error: 'Missing email' });
     if (!password) return res.status(400).send({ error: 'Missing password' });
 
     const hashedPassword = sha1(password);
+
     const user = await dbClient.userCollection().findOne({ email });
     if (user) return res.status(400).send({ error: 'Already exist' });
     const result = await dbClient.userCollection().insertOne({
       email,
       hashedPassword,
     });
+    userQueue.add({ userId: result.insertedId, email });
     return res.status(201).send({ id: result.insertedId, email });
   }
 
@@ -32,4 +35,3 @@ class UserController {
   }
 }
 export default UserController;
-

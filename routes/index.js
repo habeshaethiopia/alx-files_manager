@@ -1,6 +1,7 @@
 import AppController from '../controllers/AppController';
 import userController from '../controllers/UserController';
 import AuthController from '../controllers/AuthController';
+import FilesController from '../controllers/FileController';
 import { basicAuth, tokenAuth } from '../Auth/auth';
 import { MyError, errResponse } from '../Auth/error';
 
@@ -15,6 +16,13 @@ const route = (api) => {
   api.get('/connect', basicAuth, AuthController.getConnect);
   api.get('/disconnect', tokenAuth, AuthController.getDisconnect);
   api.get('/users/me', tokenAuth, userController.getMe);
+  api.post('/files', tokenAuth, FilesController.postUpload);
+  api.get('/files/:id', tokenAuth, FilesController.getShow);
+  api.get('/files', tokenAuth, FilesController.getIndex);
+  api.put('/files/:id/publish', tokenAuth, FilesController.putPublish);
+  api.put('/files/:id/unpublish', tokenAuth, FilesController.putUnpublish);
+  api.get('/files/:id/data', FilesController.getFile);
+
   api.use((err, req, res, next) => {
     errResponse(
       new MyError(`cannot ${req.method} ${req.url}`, 404),
