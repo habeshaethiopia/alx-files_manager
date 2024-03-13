@@ -1,33 +1,65 @@
-const redis = require('redis');
+import { promisify } from 'util';
 
+const redis = require('redis');
+/**
+ * Class for RedisClient
+ */
 class RedisClient {
   constructor() {
     this.client = redis.createClient();
+    this.connected = true;
+
+    this.client.on('error', (error) => {
+      this.connected = false;
+      console.log(`Redis client not connected to the server: ${error}`);
+    });
+
     this.client.on('connect', () => {
       this.connected = true;
     });
-    this.client.on('error', (error) => {
-      console.log(`Redis client not connected to the server: ${error}`);
-    });
   }
+  /**
+   * Check if Redis client is connected to the server
+   * @returns {boolean}
+   */
 
   isAlive() {
     return this.connected;
   }
 
-  async get(key) {
-    return this.client.get(key);
+  /**
+   * Get the value of a key in Redis
+   * @param {string} key
+   * @returns {Promise<string>}
+   */
+  getAsync(key) {
+    return promisify(this.client.get).bind(this.client)(key);
   }
 
+  /**
+   * Set the value of a key in Redis
+   * @param {string} key the key to set
+   * @param {string |number | Boolean} value item to store
+   * @param {number} duration expiration time in seconds
+   * @returns {Promise<void>}
+   */
   async set(key, value, duration) {
-    this.client.set(key, value);
-    this.client.expire(key, duration);
+    await promisify(this.client.set).bind(this.client)(
+      key,
+      value,
+      'EX',
+      duration,
+    );
   }
 
+  /**
+   * Delete a key in Redis
+   * @param {string} key
+   * @returns {Promise<void>}
+   */
   async del(key) {
-    this.client.del(key);
+    await promisify(this.client.del).bind(this.client)(key);
   }
 }
-
-const redisClient = new RedisClient();
+export const redisClient = new RedisClient();
 export default redisClient;
