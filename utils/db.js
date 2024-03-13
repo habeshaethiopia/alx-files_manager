@@ -27,12 +27,12 @@ class DBClient {
   isAlive() {
     return this.client.isConnected();
   }
+
   /**
    * Get the value of a key in Redis
    * @param {string} key
    * @returns {Promise<string>}
    */
-
   async nbUsers() {
     return this.client.db().collection('users').countDocuments();
   }
@@ -44,6 +44,15 @@ class DBClient {
 
   async nbFiles() {
     return this.client.db().collection('files').countDocuments();
+  }
+
+  /**
+   * Get the value of a key in Redis
+   * @param {string} key
+   * @returns {Promise<string>}
+   */
+  userCollection() {
+    return this.client.db().collection('users');
   }
 }
 export const dbClient = new DBClient();
