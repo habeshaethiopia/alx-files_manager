@@ -5,7 +5,7 @@ import Queue from 'bull/lib/queue';
 import imgThumbnail from 'image-thumbnail';
 import mongoDBCore from 'mongodb/lib/core';
 import dbClient from './utils/db';
-import Mailer from './utils/mailer';
+import Mailer from './utils/sendmail';
 
 const writeFileAsync = promisify(writeFile);
 const fileQueue = new Queue('thumbnail generation');
