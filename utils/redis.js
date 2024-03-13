@@ -32,7 +32,7 @@ class RedisClient {
    * @param {string} key
    * @returns {Promise<string>}
    */
-  getAsync(key) {
+  async get(key) {
     return promisify(this.client.get).bind(this.client)(key);
   }
 

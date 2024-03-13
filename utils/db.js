@@ -1,8 +1,8 @@
-import process from "process";
+import process from 'process';
 // eslint-disable-next-line no-unused-vars
 import Collection from 'mongodb/lib/collection';
 
-const { MongoClient } = require("mongodb");
+const { MongoClient } = require('mongodb');
 
 /**
  * Class for DBClient
@@ -12,11 +12,11 @@ class DBClient {
    * Constructor for DBClient
    */
   constructor() {
-    const host = process.env.DB_HOST || "localhost";
+    const host = process.env.DB_HOST || 'localhost';
     const port = process.env.DB_PORT || 27017;
-    const dbName = process.env.DB_DATABASE || "files_manager";
+    const dbName = process.env.DB_DATABASE || 'files_manager';
     const url = `mongodb://${host}:${port}/${dbName}`;
-    this.client = new MongoClient(url, { useUnifiedTopology: true});
+    this.client = new MongoClient(url, { useUnifiedTopology: true });
     this.client.connect();
   }
   /**
@@ -34,7 +34,7 @@ class DBClient {
    */
 
   async nbUsers() {
-    return this.client.db().collection("users").countDocuments();
+    return this.client.db().collection('users').countDocuments();
   }
   /**
    * Get the value of a key in Redis
@@ -43,7 +43,7 @@ class DBClient {
    */
 
   async nbFiles() {
-    return this.client.db().collection("files").countDocuments();
+    return this.client.db().collection('files').countDocuments();
   }
 }
 export const dbClient = new DBClient();
