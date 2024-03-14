@@ -93,6 +93,15 @@ class DBClient {
   async fileCollection() {
     return this.client.db().collection('files');
   }
+
+  async findUser(email) {
+    return this.client.db().collection('users').findOne({ email });
+  }
+
+  async insertionInfo(document, collectionName) {
+    const result = await this.client.db().collection(collectionName).insertOne(document);
+    return result;
+  }
 }
 export const dbClient = new DBClient();
 export default dbClient;

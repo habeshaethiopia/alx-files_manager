@@ -19,12 +19,9 @@ class UserController {
 
     const hashedPassword = sha1(password);
 
-    const user = await dbClient.userCollection().findOne({ email });
+    const user = await dbClient.findUser({ email });
     if (user) return res.status(400).send({ error: 'Already exist' });
-    const result = await dbClient.userCollection().insertOne({
-      email,
-      hashedPassword,
-    });
+    const result = await dbClient.insertionInfo({ email, password: hashedPassword }, 'users');
     userQueue.add({ userId: result.insertedId, email });
     return res.status(201).send({ id: result.insertedId, email });
   }
