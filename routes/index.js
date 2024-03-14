@@ -1,5 +1,5 @@
 import AppController from '../controllers/AppController';
-import userController from '../controllers/UserController';
+import userController from '../controllers/UsersController';
 import AuthController from '../controllers/AuthController';
 import FilesController from '../controllers/FileController';
 import { basicAuth, tokenAuth } from '../Auth/auth';
